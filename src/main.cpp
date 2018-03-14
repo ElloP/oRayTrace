@@ -1,6 +1,4 @@
-#include "vector.h"
 #include <iostream>
-#include "aabbox.h"
 #include "triangle.h"
 
 int main(void)
@@ -9,8 +7,8 @@ int main(void)
 	Ray r = Ray(vec3f(), vec3f(0.5,0.5,0.5));
 	Triangle t = Triangle(vec3f(0,-1000, 3), vec3f(-1000,1000,3), vec3f(1000,1000,3));
 	float fet = 5;
-	bool bee = t.intersect(r, fet);
-	std::cout << bee << "t:" << fet << std::endl;
+	bool bee = t.intersection(r, fet);
+	std::cout << bee << "t:" << t.normal.x << std::endl;
 	//x = x.normalize();
 	//AABBox y = AABBox(x,x);
 	//x.coords[2] = 5.0f;
