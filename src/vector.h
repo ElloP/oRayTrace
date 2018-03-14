@@ -11,6 +11,10 @@ struct Vector3f
 		{
 			float x, y, z;
 		};
+		struct
+		{
+			float r, g, b;
+		};
 		float coords[3];
 	};
 
