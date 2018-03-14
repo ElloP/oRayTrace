@@ -1,6 +1,10 @@
 #include <iostream>
 #include "triangle.h"
 #include "ImageIO.h"
+#include "renderer.h"
+#include "scene.h"
+#include "sphere.h"
+#include "material.h"
 
 int main(void)
 {
@@ -8,22 +12,28 @@ int main(void)
 	Ray r = Ray(vec3f(), vec3f(0.5,0.5,0.5));
 	Triangle t = Triangle(vec3f(0,-1000, 3), vec3f(-1000,1000,3), vec3f(1000,1000,3));
 	float fet = 5;
-	bool bee = t.intersection(r, fet);
-	std::cout << bee << "t:" << t.normal.x << std::endl;
 	std::vector<int> tesese = std::vector<int>();
+
+	Material mat = Material(vec3f(1.0,0.0,0.0), vec3f(1.0));
+	Material mat2 = Material(vec3f(0.0,0.0,1.0), vec3f(1.0));
+
+	Scene scene = Scene();
+	scene.addObjectToScene(&Sphere(vec3f(1.0,0.0,5.0), 0.5f, mat));
+	scene.addObjectToScene(&Sphere(vec3f(3.0,0.0,4.0), 0.5f, mat2));
+
+	Renderer renderer = Renderer(&scene);
+
 	ImageIO i = ImageIO();
 	for(int y = 0; y < i.getHeight(); y++)
 	{
 		for(int x = 0; x < i.getWidth(); x++)
 		{
-			if(x == 25 && y == 0)
-				i.setPixel(x,y,&vec3f(0.0));
-			else
-				i.setPixel(x,y,&vec3f(1.0));
+			vec3f color = renderer.samplePixel(x,y);
+			//std::cout << "x:" << color.x << "y:" << color.y << "z:" << color.z << std::endl;
+			i.setPixel(x,y, &color);
 		}
 	}
 	
-
 	i.writeToImage("examples/test.png");
 	//x = x.normalize();
 	//AABBox y = AABBox(x,x);

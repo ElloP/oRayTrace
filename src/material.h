@@ -2,7 +2,6 @@
 #define MATERIAL_H_
 
 #include "ray.h"
-#include "intersectable.h"
 
 #ifndef PI
 #define PI 3.141592653589793238
@@ -13,11 +12,13 @@ enum MaterialType {DIFFUSE};
 class Material 
 {
 public:
+	Material(vec3f _color = vec3f(1.0), vec3f _emission = vec3f(1.0));
+
 	vec3f getColor() const;
 	vec3f getEmission() const;
-	MaterialType getType() const;
+	//MaterialType getType() const;
 
-	Ray getReflectionRay(const Ray &r, Hit &h) const;
+	Ray getReflectionRay(const Ray &ray, const vec3f &point, const vec3f &normal) const;
 private:
 	vec3f color;
 	vec3f emission;

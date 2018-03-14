@@ -2,6 +2,7 @@
 #define TRIANGLE_H_
 
 #include "BVH\aabbox.h"
+#include "material.h"
 
 class Triangle : public Intersectable 
 {
@@ -15,15 +16,16 @@ public:
 		vec3f vertices[3];
 	};
 	vec3f e1, e2, normal; //triangle edges and normal
+	Material material;
 
 	Triangle() = default;
 
-	Triangle(vec3f _v0, vec3f _v1, vec3f _v2) : v0(_v0), v1(_v1), v2(_v2)
+	Triangle(vec3f _v0, vec3f _v1, vec3f _v2, Material _material = Material()) : v0(_v0), v1(_v1), v2(_v2), material(_material)
 	{
 		setEdges();
 	}
 
-	Triangle(vec3f _vertices[3]) : v0(_vertices[0]), v1(_vertices[1]), v2(_vertices[2])
+	Triangle(vec3f _vertices[3], Material _material = Material()) : v0(_vertices[0]), v1(_vertices[1]), v2(_vertices[2]), material(_material)
 	{
 		setEdges();
 	}
@@ -36,7 +38,7 @@ public:
 	}
 
 	//intersection testing using the Möller-trumbore algorithm
-	bool intersection(Ray &ray, float &t) 
+	bool intersection(const Ray &ray, Hit &hit) 
 	{
 		const float epsilon = 0.0000001f;
 
@@ -64,7 +66,10 @@ public:
 		if(tTemp > epsilon)
 		{
 			//TODO: might wanna return intersection point
-			t = tTemp;
+			hit.distance = tTemp;
+			hit.normal = normal;
+			hit.material = material;
+			hit.point = ray.origin + ray.direction * hit.distance;
 			return true;
 		}
 

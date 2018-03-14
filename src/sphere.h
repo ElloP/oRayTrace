@@ -2,17 +2,19 @@
 #define SPHERE_H_
 
 #include "BVH\aabbox.h"
+#include "material.h"
 
 class Sphere : public Intersectable 
 {
 public:
 	vec3f position;
 	float radius;
+	Material material;
 
-	Sphere(vec3f _position = vec3f(0.0,0.0,0.0), float _radius = 1.0f) : position(_position), radius(_radius)
+	Sphere(vec3f _position = vec3f(0.0,0.0,0.0), float _radius = 1.0f, Material _material = Material()) : position(_position), radius(_radius), material(_material)
 	{}
 
-	bool intersection(Ray &ray, float &t)
+	bool intersection(const Ray &ray, Hit &hit)
 	{
 		//not sure about this
 		float a = dot(ray.direction, ray.direction);
@@ -32,7 +34,10 @@ public:
 				return false; //both ts are negative
 		}
 
-		t = t0;
+		hit.distance = t0;
+		hit.point = ray.origin + ray.direction * hit.distance;
+		hit.normal = hit.point - position;
+		hit.material = material;
 		return true;
 	}
 

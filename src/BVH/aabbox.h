@@ -10,7 +10,7 @@ public:
 
 	AABBox(vec3f _bottomLeft = vec3f(), vec3f _topRight = vec3f()) : bottomLeft(_bottomLeft), topRight(_topRight) {};
 
-	bool intersection(Ray &ray, float &t) 
+	bool intersection(const Ray &ray, Hit &hit) 
 	{
 		float t1 = (bottomLeft.x - ray.origin.x) * ray.inverseDir.x;
 		float t2 = (bottomLeft.y - ray.origin.y) * ray.inverseDir.y;
@@ -30,7 +30,9 @@ public:
 
 		tmax = std::min(tmax, t2);
 
-		t = tmin;
+		//AABBoxes have no normal or material
+		hit.distance = tmin;
+		hit.point = ray.origin + ray.direction * hit.distance;
 
 		return tmin <= tmax;
 	}
