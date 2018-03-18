@@ -1,7 +1,14 @@
 #ifndef VECTOR_H_
 #define VECTOR_H_
 
+#include <random>
 #include <math.h>
+
+//TODO: put in utils
+static float randomf(int distribution, int min)
+{
+	return (rand() / (float) RAND_MAX * distribution) + min;
+}
 
 struct Vector3f
 {
@@ -20,8 +27,10 @@ struct Vector3f
 
 	Vector3f(float _x = 0.0f, float _y = 0.0f, float _z = 0.0f) : x(_x), y(_y), z(_z) {};
 
+	float length() { return sqrt(x*x + y*y + z*z); }
 	Vector3f operator+(const Vector3f &other) const { return Vector3f(x + other.x, y + other.y, z + other.z); }
 	Vector3f operator-(const Vector3f &other) const { return Vector3f(x - other.x, y - other.y, z - other.z); }
+	Vector3f operator-() const { return Vector3f(-x, -y, -z); }
 	Vector3f operator*(const Vector3f &other) const { return Vector3f(x * other.x, y * other.y, z * other.z); }
 	Vector3f operator*(float other) const { return Vector3f(x * other, y * other, z * other); }
 	Vector3f operator/(float other) const { return Vector3f(x / other, y / other, z / other); }

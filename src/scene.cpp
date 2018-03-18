@@ -17,6 +17,7 @@ Hit Scene::intersect(const Ray &ray)
 			hit.point = ray.origin + ray.direction * hit.distance;
 			hit.material = temp.material;
 			hit.normal = temp.normal;
+			hit.hit = temp.hit;
 		}
 	}
 	return hit;
@@ -25,32 +26,24 @@ Hit Scene::intersect(const Ray &ray)
 vec3f Scene::trace(const Ray &ray, int depth)
 {
 	Hit intersection = intersect(ray);
-
-	//Possible bug, check if bool on hit struct is needed
-	if(!intersection.distance)
-		return vec3f();
-
-	vec3f color = intersection.material.getColor();
-
-	//calculate max reflection
-	float p = color.x>color.y && color.x>color.z ? color.x : color.y>color.z ? color.y : color.z; 
-
-	//use russian roulette termination
-	float random = (float) rand() / (RAND_MAX);
-	if(depth > traceDepth)
+	if(intersection.hit && depth <= traceDepth)
 	{
-		if(random < p * 0.9) 
+		Ray reflected;
+		vec3f color = intersection.material.getColor();
+		if(intersection.material.reflectedRay(ray, intersection.point, intersection.normal, reflected))
 		{
-			color = color * (0.9 / p);
+			return color * (trace(reflected, depth + 1) * 0.5);
 		}
-		else
-			return intersection.material.getEmission();
+		else 
+		{
+			return vec3f(0.0);
+		}
 	}
-	
-	Ray reflectionRay = intersection.material.getReflectionRay(ray, intersection.point, intersection.normal);
-	vec3f test = trace(reflectionRay, depth + 1);
-	//std::cout << "x:" << test.x << "y:" << test.y << "z:" << test.z << std::endl;
-	return color;
+	else
+	{
+		float t = 0.5 * (ray.direction.y + 1);
+		return vec3f(1.0,1.0,1.0);
+	}
 }
 
 void Scene::addObjectToScene(Intersectable* intersectable) 

@@ -6,17 +6,19 @@
 
 struct Hit 
 {
-	Hit(float _distance = 0, vec3f _point = vec3f(), vec3f _normal = vec3f(), Material _material = Material()) 
+	Hit(float _distance = 0, vec3f _point = vec3f(), vec3f _normal = vec3f(), bool _hit = false, Material _material = Material()) 
 		: 
 		distance(_distance), 
 		point(_point), 
-		normal(_normal), 
+		normal(_normal),
+		hit(_hit),
 		material(_material)
 	{}
 
 	float distance;
 	vec3f point;
 	vec3f normal;
+	bool hit;
 	Material material;
 };
 

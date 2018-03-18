@@ -18,7 +18,7 @@ public:
 	vec3f getEmission() const;
 	//MaterialType getType() const;
 
-	Ray getReflectionRay(const Ray &ray, const vec3f &point, const vec3f &normal) const;
+	bool reflectedRay(const Ray &ray, const vec3f &point, const vec3f &normal, Ray &result) const;
 private:
 	vec3f color;
 	vec3f emission;

@@ -10,7 +10,7 @@ public:
 	Scene(int _traceDepth = 4);
 	void addObjectToScene(Intersectable* intersectable);
 	Hit intersect(const Ray &ray);
-	vec3f trace(const Ray &ray, int depth = 4);
+	vec3f trace(const Ray &ray, int depth = 0);
 
 private:
 	int traceDepth;

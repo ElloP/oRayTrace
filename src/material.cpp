@@ -1,5 +1,8 @@
 #include "material.h"
 #include <random>
+#define _XOPEN_SOURCE
+#include <stdlib.h>
+#include <iostream>
 
 Material::Material(vec3f _color, vec3f _emission) : color(_color)
 {}
@@ -9,22 +12,23 @@ vec3f Material::getColor() const
 	return color;
 }
 
+vec3f random_in_unit_sphere() {
+    vec3f p;
+    do {
+		
+        p = vec3f(randomf(2,-1),randomf(2,-1),randomf(2,-1)) * 2.0 - vec3f(1,1,1);
+    } while (p.length() * p.length() >= 1.0);
+    return p;
+}
+
 vec3f Material::getEmission() const 
 {
 	return emission;
 }
 
-Ray Material::getReflectionRay(const Ray &ray, const vec3f &point, const vec3f &normal) const
+bool Material::reflectedRay(const Ray &ray, const vec3f &point, const vec3f &normal, Ray &result) const
 {
-	//if(type == DIFFUSE)
-	//{
-		vec3f n1 = dot(normal, (ray.direction)) < 0 ? normal : normal * -1;
-		float r1 = 2 * PI * rand(), r2 = rand(), r2s = sqrt(r2);
-		vec3f w = n1;
-		vec3f u = cross((fabs(w.x) > 0.1 ? vec3f(0,1) : vec3f(1.0)), w).normalize();
-		vec3f v = cross(w, u);
-		vec3f d = (u * cos(r1) * r2s + v * sin(r1) * r2s + w * sqrt(1-r2)).normalize();
-		//TODO: this might break
-		return Ray(point, d);
-	//}
+	vec3f reflectionDir = point + normal + random_in_unit_sphere();
+	result = Ray(point, reflectionDir);
+	return true;
 }

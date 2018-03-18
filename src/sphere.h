@@ -3,6 +3,7 @@
 
 #include "BVH\aabbox.h"
 #include "material.h"
+#include <iostream>
 
 class Sphere : public Intersectable 
 {
@@ -17,9 +18,10 @@ public:
 	bool intersection(const Ray &ray, Hit &hit)
 	{
 		//not sure about this
+		vec3f oc = ray.origin - position;
 		float a = dot(ray.direction, ray.direction);
-		float b = 2 * dot(ray.direction, ray.origin);
-		float c = dot(ray.origin, ray.origin) - radius * radius;
+		float b = 2.0 * dot(ray.direction, oc);
+		float c = dot(oc, oc) - radius * radius;
 
 		float t0, t1;
 
@@ -38,6 +40,7 @@ public:
 		hit.point = ray.origin + ray.direction * hit.distance;
 		hit.normal = hit.point - position;
 		hit.material = material;
+		hit.hit = true;
 		return true;
 	}
 

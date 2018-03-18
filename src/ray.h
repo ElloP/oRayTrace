@@ -6,6 +6,7 @@
 struct Ray {
 	vec3f origin, direction, inverseDir;
 
+	Ray() = default;
 	Ray(const vec3f &_origin, const vec3f &_direction) : origin(_origin), direction(_direction)
 	{
 		direction = direction.normalize();

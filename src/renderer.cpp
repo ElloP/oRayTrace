@@ -28,8 +28,8 @@ Ray Renderer::getPrimaryRay(int pixelX, int pixelY)
 	float w = (float) width;
 	float h = (float) height;
 
-	float offsetX = 0.5;
-	float offsetY = 0.5;
+	float offsetX = randomf(1, 0);
+	float offsetY = randomf(1, 0);
 
 
 	direction.x = (x + offsetX) / w * 2.0f - 1.0f;

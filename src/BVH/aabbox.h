@@ -31,8 +31,12 @@ public:
 		tmax = std::min(tmax, t2);
 
 		//AABBoxes have no normal or material
-		hit.distance = tmin;
-		hit.point = ray.origin + ray.direction * hit.distance;
+		if(tmin <= tmax)
+		{
+			hit.distance = tmin;
+			hit.point = ray.origin + ray.direction * hit.distance;
+			hit.hit = tmin <= tmax;
+		}
 
 		return tmin <= tmax;
 	}

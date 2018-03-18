@@ -37,6 +37,8 @@ public:
 		normal = cross(e1,e2).normalize();
 	}
 
+	inline void flipNormal() { normal = -normal; }
+
 	//intersection testing using the Möller-trumbore algorithm
 	bool intersection(const Ray &ray, Hit &hit) 
 	{
@@ -65,11 +67,11 @@ public:
 
 		if(tTemp > epsilon)
 		{
-			//TODO: might wanna return intersection point
 			hit.distance = tTemp;
 			hit.normal = normal;
 			hit.material = material;
 			hit.point = ray.origin + ray.direction * hit.distance;
+			hit.hit = true;
 			return true;
 		}
 
