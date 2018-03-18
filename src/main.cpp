@@ -5,39 +5,39 @@
 #include "scene.h"
 #include "sphere.h"
 #include "material.h"
+#include "camera.h"
 
 int main(void)
 {
-	AABBox test = AABBox(vec3f(2.0f, 2.0f), vec3f(7.0f, 4.0f));
-	Ray r = Ray(vec3f(0,2,0), vec3f(0,-1,0));
-	
-
 	Material mat = Material(vec3f(0.7,0.4,0.2), vec3f(1.0));
 	Material white = Material(vec3f(1.0,1.0,1.0), vec3f(1.0));
-	Material mat2 = Material(vec3f(0.0,0.0,1.0), vec3f(1.0));
-	Material mat3 = Material(vec3f(1.0,0.0,0.0), vec3f(1.0));
-	Triangle floor1 = Triangle(vec3f(-3,-2, -4), vec3f(-3,-2,4), vec3f(3,-2,-4), mat);
-	Triangle floor2 = Triangle(vec3f(3,-2,4), vec3f(3,-2,-4), vec3f(-3,-2,4), mat);
-	Triangle rightWall1 = Triangle(vec3f(3,-2, 4), vec3f(3,-2, -4), vec3f(3,2,4), mat2);
-	Triangle rightWall2 = Triangle(vec3f(3, 2, -4), vec3f(3,-2,-4), vec3f(3,2,4), mat2);
-	Triangle leftWall1 = Triangle(vec3f(-3,-2, 4), vec3f(-3,-2, -4), vec3f(-3,2,4), mat3);
-	Triangle leftWall2 = Triangle(vec3f(-3, 2, -4), vec3f(-3,-2,-4), vec3f(-3,2,4), mat3);
+	Material blue = Material(vec3f(0.0,0.0,1.0), vec3f(1.0));
+	Material red = Material(vec3f(1.0,0.0,0.0), vec3f(1.0));
 
+	Triangle floor1 = Triangle(vec3f(-3,-2, -4), vec3f(-3,-2,4), vec3f(3,-2,-4), white);
+	Triangle floor2 = Triangle(vec3f(3,-2,4), vec3f(3,-2,-4), vec3f(-3,-2,4), white);
 
+	Triangle roof1 = Triangle(vec3f(-3,2, -4), vec3f(-3,2,4), vec3f(3,2,-4), white);
+	Triangle roof2 = Triangle(vec3f(3,2,4), vec3f(3,2,-4), vec3f(-3,2,4), white);
+
+	Triangle rightWall1 = Triangle(vec3f(3,-2, 4), vec3f(3,2,4), vec3f(3,-2, -4), red);
+	Triangle rightWall2 = Triangle(vec3f(3, 2, -4), vec3f(3,2,4), vec3f(3,-2,-4), red);
+
+	Triangle leftWall1 = Triangle(vec3f(-3,-2, 4), vec3f(-3,-2, -4), vec3f(-3,2,4), blue);
+	Triangle leftWall2 = Triangle(vec3f(-3, 2, -4), vec3f(-3,-2,-4), vec3f(-3,2,4), blue);
 
 	Triangle backWall1 = Triangle(vec3f(-3, -2, 4), vec3f(3,-2,4), vec3f(3,2,4),mat);
 	Triangle backWall2 = Triangle(vec3f(-3, 2, 4), vec3f(3,2,4), vec3f(-3,-2,4),mat);
 
-	leftWall1.flipNormal();
-	leftWall2.flipNormal();
+	//leftWall1.flipNormal();
+	//leftWall2.flipNormal();
+	backWall1.flipNormal();
+	roof1.flipNormal();
+	roof2.flipNormal();
 
-	Sphere sp = Sphere(vec3f(0,-0.5,2), 1.0f, white);
+	Sphere sp = Sphere(vec3f(0,-0.5,2), 0.8f, white);
 
-	Hit testhit = Hit();
-	floor2.intersection(r, testhit);
-	std::cout<< testhit.hit << std::endl;
-
-	Scene scene = Scene(50);
+	Scene scene = Scene(8);
 	scene.addObjectToScene(&floor1);
 	scene.addObjectToScene(&floor2);
 	scene.addObjectToScene(&rightWall1);
@@ -46,11 +46,15 @@ int main(void)
 	scene.addObjectToScene(&backWall2);
 	scene.addObjectToScene(&leftWall1);
 	scene.addObjectToScene(&leftWall2);
+	//scene.addObjectToScene(&roof1);
+	//scene.addObjectToScene(&roof2);
 	scene.addObjectToScene(&sp);
 	//scene.addObjectToScene(&Sphere(vec3f(1.0,0.0,5.0), 0.5f, mat));
 	//scene.addObjectToScene(&Sphere(vec3f(3.0,0.0,4.0), 0.5f, mat2));
 
-	Renderer renderer = Renderer(&scene);
+	Camera camera = Camera();
+
+	Renderer renderer = Renderer(&scene, &camera);
 
 	ImageIO i = ImageIO();
 	int nx = 200;
@@ -59,7 +63,7 @@ int main(void)
 	{
 		for(int y = 0; y < i.getHeight(); y++)
 		{
-			vec3f color = renderer.samplePixel(x,y,25);
+			vec3f color = renderer.samplePixel(x,y,4);
 			i.setPixel(x,y, color);
 		}
 	}

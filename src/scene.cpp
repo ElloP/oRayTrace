@@ -32,11 +32,11 @@ vec3f Scene::trace(const Ray &ray, int depth)
 		vec3f color = intersection.material.getColor();
 		if(intersection.material.reflectedRay(ray, intersection.point, intersection.normal, reflected))
 		{
-			return color * (trace(reflected, depth + 1) * 0.5);
+			return color * trace(reflected, depth + 1);
 		}
 		else 
 		{
-			return vec3f(0.0);
+			return vec3f();
 		}
 	}
 	else

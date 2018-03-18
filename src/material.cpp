@@ -28,7 +28,7 @@ vec3f Material::getEmission() const
 
 bool Material::reflectedRay(const Ray &ray, const vec3f &point, const vec3f &normal, Ray &result) const
 {
-	vec3f reflectionDir = point + normal + random_in_unit_sphere();
-	result = Ray(point, reflectionDir);
+	vec3f target = point + normal + random_in_unit_sphere();
+	result = Ray(point, target - point);
 	return true;
 }
