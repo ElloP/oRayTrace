@@ -7,14 +7,7 @@
 class Triangle : public Intersectable 
 {
 public:
-	union 
-	{
-		struct 
-		{
-			vec3f v0, v1, v2; //triangle vertices
-		};
-		vec3f vertices[3];
-	};
+	vec3f v0, v1, v2; //triangle vertices
 	vec3f e1, e2, normal; //triangle edges and normal
 	Material material;
 

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <chrono>
 #include "triangle.h"
 #include "ImageIO.h"
 #include "renderer.h"
@@ -34,10 +35,12 @@ int main(void)
 	backWall1.flipNormal();
 	roof1.flipNormal();
 	roof2.flipNormal();
+	rightWall2.flipNormal();
+	leftWall2.flipNormal();
 
 	Sphere sp = Sphere(vec3f(0,-0.5,2), 0.8f, white);
 
-	Scene scene = Scene(8);
+	Scene scene = Scene(10);
 	scene.addObjectToScene(&floor1);
 	scene.addObjectToScene(&floor2);
 	scene.addObjectToScene(&rightWall1);
@@ -57,18 +60,29 @@ int main(void)
 	Renderer renderer = Renderer(&scene, &camera);
 
 	ImageIO i = ImageIO();
-	int nx = 200;
-	int ny = 100;
+
+	auto start = std::chrono::system_clock::now();
+
+	int raysPerPixel = 128;
 	for(int x = 0; x < i.getWidth(); x++)
 	{
 		for(int y = 0; y < i.getHeight(); y++)
 		{
-			vec3f color = renderer.samplePixel(x,y,4);
+			vec3f color = renderer.samplePixel(x,y,raysPerPixel);
 			i.setPixel(x,y, color);
 		}
 	}
 	
 	i.writeToImage("examples/test.png");
+	auto end = std::chrono::system_clock::now();
+	
+	int raysTraced = i.getHeight() * i.getWidth() * raysPerPixel;
+
+	auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+	std::cout << "Image rendered in: " << elapsed.count() << "ms" << std::endl;
+	std::cout << "Primary Rays traced in total: " << raysTraced << std::endl;
+	std::cout << "Primary Rays traced per ms: " << raysPerPixel / (float) elapsed.count() << std::endl;
+
 	//x = x.normalize();
 	//AABBox y = AABBox(x,x);
 	//x.coords[2] = 5.0f;
